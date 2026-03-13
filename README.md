@@ -46,6 +46,9 @@ Team Members and Roles
    Name	              Role	                     Responsibilities
 Arindam Biswas |	                	   |   
 Team Member 2  |                       |  
+Team Member 3	 |                       |  
+Team member 4  |                       |
+Abdul Karim    |  Member 2             |   Added a new endpoint
 Jaehyeok Park	 |Update the HTML client |  Manage and check error in HTML client
 Team member 4  |                       |
 team member 5  |                       |
