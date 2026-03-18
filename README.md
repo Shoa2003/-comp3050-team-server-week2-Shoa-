@@ -1,80 +1,227 @@
-**COMP3050**
-Available Endpoints
+# COMP3050 — Team Server Project
 
-The server currently exposes the following API endpoints:
+## Project Overview
 
-/hello
+This is the team project for COMP3050 (Software System Development and Operations)
+at Macquarie University, 2026.
 
-Handled by HelloHandler
+We are building a **Java server** for a 2D tile-based virtual world game.
+The server tracks the player's position on a map and responds to movement
+and information requests from a web-based client.
 
-Method: GET
-Response Type: application/json
+The client (web browser) is provided — our team builds and deploys the server.
 
-Example Response:
+---
 
+## Assessment Details
+
+| Component               | Marks        | Type       |
+| ----------------------- | ------------ | ---------- |
+| Implemented APIs        | 15 marks     | Team       |
+| Code Quality + Testing  | 10 marks     | Team       |
+| DevOps Process          | 5 marks      | Team       |
+| Individual Presentation | 20 marks     | Individual |
+| **Total**               | **50 marks** |            |
+
+**Due Date:** 5 June 2026, 23:55 (Week 13)
+
+**Submission:** Git repository (GitHub) + face-to-face presentation
+
+---
+
+## What We Need to Build
+
+### Core APIs
+
+| Endpoint            | Method | Description                                       |
+| ------------------- | ------ | ------------------------------------------------- |
+| `/move?dy=DY&dx=DX` | GET    | Move the player character N/S/E/W                 |
+| `/info?y=Y&x=X`     | GET    | Return map tile data around the player's location |
+
+### `/move` Details
+
+- Moves the player one space in a cardinal direction (N/S/E/W)
+- Returns `200` with new `{y, x}` location if successful
+- Returns `204` if blocked (wall, water, map edge) or invalid (diagonal, >1 space)
+
+```json
+{ "y": 0, "x": 6 }
+```
+
+### `/info` Details
+
+- Returns an 11x11 grid of tile data around the player
+- Returns `200` with tile info if successful
+- Returns `204` if the requested location doesn't match the player's location
+
+```json
 {
-"message": "Hello from COMP3050!"
+  "y": 7,
+  "x": 5,
+  "top": 2,
+  "left": 0,
+  "bottom": 12,
+  "right": 10,
+  "info": [
+    ["g", "g", "W", "W", "g"],
+    ["_", "_", "_", "g", "g"]
+  ]
 }
+```
 
-**Description:**
-This endpoint returns a simple greeting message in JSON format to confirm that the server is running correctly.
+### Map Tile Types
 
-/test
+| Symbol | Tile          | Blocks Movement? |
+| ------ | ------------- | ---------------- |
+| `B`    | Brick wall    | ✅               |
+| `S`    | Stone wall    | ✅               |
+| `W`    | Water         | ✅               |
+| `D`    | Door (closed) | ✅               |
+| `g`    | Grass         | ❌               |
+| `_`    | Dirt          | ❌               |
+| `d`    | Door (open)   | ❌               |
+| `w`    | Wooden boards | ❌               |
+| `t`    | Tree          | ❌               |
+| `s`    | Sand          | ❌               |
 
-Handled by MyHandler
+---
 
-Method: GET
-Response Type: application/json
+## Tech Stack
 
-Example Response:
+- **Language:** Java 18+
+- **HTTP Server:** Java built-in HttpServer
+- **Containerisation:** Docker
+- **Reverse Proxy:** Nginx
+- **CI/CD:** GitHub Actions
+- **Cloud Deployment:** AWS (Terraform)
+- **Testing:** JUnit 5 + Maven
 
+---
+
+## Project Task Assignment
+
+| Task                                      | Assigned To     | Status  |
+| ----------------------------------------- | --------------- | ------- |
+| Map file setup and map-loading code       | Arindam         | 🔲 Todo |
+| Implement `/move` endpoint                | Jaehyeok        | 🔲 Todo |
+| Implement `/info` endpoint                | Abdul           | 🔲 Todo |
+| Set up Docker, CI, Testing infrastructure | Shoa + Hanseong | 🔲 Todo |
+
+---
+
+## Development Priorities
+
+```
+Step 1: Implement /move and /info endpoints  ← most important
+Step 2: Map file loading
+Step 3: Docker + AWS deployment
+Step 4: CI/CD automation
+Step 5: Write tests
+```
+
+---
+
+## How to Run
+
+```bash
+# Compile
+javac Test.java HelloHandler.java MyHandler.java
+
+# Run
+java Test
+
+# Visit
+http://localhost:8000/test
+```
+
+### With Docker
+
+```bash
+docker build -t comp3050-server .
+docker run -d -p 8000:8000 comp3050-server
+```
+
+### With Docker Compose
+
+```bash
+docker compose up -d
+```
+
+---
+
+## Available Endpoints (Current)
+
+### GET /test
+
+```json
 {
-"name": "Japan",
-"gold": 27,
-"silver": 14,
-"bronze": 17,
-"total": 58
+  "name": "Japan",
+  "gold": 27,
+  "silver": 14,
+  "bronze": 17,
+  "total": 58
 }
+```
 
-Description:
-This endpoint returns a JSON object containing Olympic medal statistics for a country. It also demonstrates CORS support for cross-origin requests.
+### GET /hello
 
-**Team Members and Roles**
-   **Name	              Role	                     Responsibilities**
-	                	
-Hanseong Park  | Team Manager          |    Created and managed the team Github repository, coordinated the team workflow, reviewed pull requests, merge                 |                       |     contributions, and set up CI workflow using Github actions
-Abdul Karim    |  Member 2             |   Added a new endpoint
-Jaehyeok Park	 |Update the HTML client |  Manage and check error in HTML client
-Arindam Biswas |	GITHUB DOCUMENTATION |   ADD UPDATE README FILE ACCORDING TO THE PROGRESS AND CURRENT STATE OF PROJECT
+```json
+{
+  "message": "Hello from COMP3050!"
+}
+```
 
+---
 
-**How to Contribute**
+## Team Members and Roles
 
-We follow a Fork and Pull Request workflow to manage contributions.
+### Week 2 — Git, GitHub & CI
 
-1. Fork the Repository
+| Name           | Role         | Responsibilities                                                                                                      |
+| -------------- | ------------ | --------------------------------------------------------------------------------------------------------------------- |
+| Hanseong Park  | Team Manager | Created and managed the GitHub repository, reviewed and merged pull requests, set up CI workflow using GitHub Actions |
+| Abdul Karim    | Member A     | Added a new `/hello` endpoint (HelloHandler.java)                                                                     |
+| Jaehyeok Park  | Member B     | Updated and fixed the HTML client                                                                                     |
+| Arindam Biswas | Member C     | Updated README documentation                                                                                          |
 
-Click the Fork button on the GitHub repository to create your own copy.
+### Week 3 — Docker & Containerisation
 
-2. Clone Your Fork
+| Name           | Role         | Responsibilities                                     |
+| -------------- | ------------ | ---------------------------------------------------- |
+| Hanseong Park  | Team Manager | Managed the repo, reviewed and merged all PRs        |
+| Abdul Karim    | Member A     | Wrote the Dockerfile to containerise the Java server |
+| Shoa           | Member B     | Created Docker Compose setup with Nginx              |
+| Arindam Biswas | Member C     | Built and pushed the image to Docker Hub             |
+| Jaehyeok Park  | Member D     | Added Docker build step to the CI workflow           |
 
-3. Create a New Branch
+### Week 4 — Testing & TDD
 
-Example:
+| Name          | Role         | Responsibilities                                        |
+| ------------- | ------------ | ------------------------------------------------------- |
+| Hanseong Park | Team Manager | Managed the repo, reviewed and merged all PRs           |
+| All members   | TBD          | Set up JUnit testing, write unit tests for project code |
 
-git checkout -b add-new-endpoint 4. Make Your Changes
+---
 
-Add new features, fix bugs, or update documentation.
+## How to Contribute
 
-5. Commit Your Changes
-   git add .
-   git commit -m "Added new API endpoint"
-6. Push Your Branch
-   git push origin feature-name
-7. Create a Pull Request
+We follow a Fork and Pull Request workflow.
 
-Go to the original repository on GitHub and create a Pull Request (PR) from your forked branch.
+1. Fork the repository
+2. Clone your fork
+3. Create a new branch
 
-Your repository leader will then review and merge.
+```bash
+git checkout -b your-branch-name
+```
 
--HANSFIXING
+4. Make your changes
+5. Commit and push
+
+```bash
+git add .
+git commit -m "Description of change"
+git push origin your-branch-name
+```
+
+6. Open a Pull Request → Team Manager will review and merge
