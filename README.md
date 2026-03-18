@@ -13,7 +13,7 @@ Response Type: application/json
 Example Response:
 
 {
-  "message": "Hello from COMP3050!"
+"message": "Hello from COMP3050!"
 }
 
 **Description:**
@@ -29,27 +29,22 @@ Response Type: application/json
 Example Response:
 
 {
-  "name": "Japan",
-  "gold": 27,
-  "silver": 14,
-  "bronze": 17,
-  "total": 58
+"name": "Japan",
+"gold": 27,
+"silver": 14,
+"bronze": 17,
+"total": 58
 }
 
 Description:
 This endpoint returns a JSON object containing Olympic medal statistics for a country. It also demonstrates CORS support for cross-origin requests.
 
-
-
-
 **Team Members and Roles**
-   **Name	              Role	                     Responsibilities**
-	                	
-Hanseong Park  | Team Manager          |    Created and managed the team Github repository, coordinated the team workflow, reviewed pull requests, merge                 |                       |     contributions, and set up CI workflow using Github actions
-Abdul Karim    |  Member 2             |   Added a new endpoint
-Jaehyeok Park	 |Update the HTML client |  Manage and check error in HTML client
-Arindam Biswas |	GITHUB DOCUMENTATION |   ADD UPDATE README FILE ACCORDING TO THE PROGRESS AND CURRENT STATE OF PROJECT
-
+**Name Role Responsibilities**
+Hanseong Park | Team Manager | Created and managed the team Github repository, coordinated the team workflow, reviewed pull requests, merge | | contributions, and set up CI workflow using Github actions
+Abdul Karim | Member 2 | Added a new endpoint
+Jaehyeok Park |Update the HTML client | Manage and check error in HTML client
+Arindam Biswas | GITHUB DOCUMENTATION | ADD UPDATE README FILE ACCORDING TO THE PROGRESS AND CURRENT STATE OF PROJECT
 
 **How to Contribute**
 
@@ -63,21 +58,21 @@ Click the Fork button on the GitHub repository to create your own copy.
 
 3. Create a New Branch
 
-
 Example:
 
-git checkout -b add-new-endpoint
-4. Make Your Changes
+git checkout -b add-new-endpoint 4. Make Your Changes
 
 Add new features, fix bugs, or update documentation.
 
 5. Commit Your Changes
-git add .
-git commit -m "Added new API endpoint"
+   git add .
+   git commit -m "Added new API endpoint"
 6. Push Your Branch
-git push origin feature-name
+   git push origin feature-name
 7. Create a Pull Request
 
 Go to the original repository on GitHub and create a Pull Request (PR) from your forked branch.
 
 Your repository leader will then review and merge.
+
+-HANSFIXING
