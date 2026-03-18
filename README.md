@@ -1,78 +1,99 @@
-**COMP3050**
-Available Endpoints
+# COMP3050 — Team Server
 
-The server currently exposes the following API endpoints:
+## Available Endpoints
 
-/hello
+### GET /test
 
-Handled by HelloHandler
+Handled by `MyHandler`
 
-Method: GET
-Response Type: application/json
+- Response Type: `application/json`
+- Example Response:
 
-Example Response:
-
+```json
 {
-"message": "Hello from COMP3050!"
+  "name": "Japan",
+  "gold": 27,
+  "silver": 14,
+  "bronze": 17,
+  "total": 58
 }
+```
 
-**Description:**
-This endpoint returns a simple greeting message in JSON format to confirm that the server is running correctly.
+### GET /hello
 
-/test
+Handled by `HelloHandler`
 
-Handled by MyHandler
+- Response Type: `application/json`
+- Example Response:
 
-Method: GET
-Response Type: application/json
-
-Example Response:
-
+```json
 {
-"name": "Japan",
-"gold": 27,
-"silver": 14,
-"bronze": 17,
-"total": 58
+  "message": "Hello from COMP3050!"
 }
+```
 
-Description:
-This endpoint returns a JSON object containing Olympic medal statistics for a country. It also demonstrates CORS support for cross-origin requests.
+---
 
-**Team Members and Roles**
-**Name Role Responsibilities**
-Hanseong Park | Team Manager | Created and managed the team Github repository, coordinated the team workflow, reviewed pull requests, merge | | contributions, and set up CI workflow using Github actions
-Abdul Karim | Member 2 | Added a new endpoint
-Jaehyeok Park |Update the HTML client | Manage and check error in HTML client
-Arindam Biswas | GITHUB DOCUMENTATION | ADD UPDATE README FILE ACCORDING TO THE PROGRESS AND CURRENT STATE OF PROJECT
+## How to Run
 
-**How to Contribute**
+```bash
+javac Test.java HelloHandler.java MyHandler.java
+java Test
+```
 
-We follow a Fork and Pull Request workflow to manage contributions.
+Visit: http://localhost:8000/test
 
-1. Fork the Repository
+---
 
-Click the Fork button on the GitHub repository to create your own copy.
+## Team Members and Roles
 
-2. Clone Your Fork
+### Week 2 — Git, GitHub & CI
 
-3. Create a New Branch
+| Name           | Role         | Responsibilities                                                                                                      |
+| -------------- | ------------ | --------------------------------------------------------------------------------------------------------------------- |
+| Hanseong Park  | Team Manager | Created and managed the GitHub repository, reviewed and merged pull requests, set up CI workflow using GitHub Actions |
+| Abdul Karim    | Member A     | Added a new `/hello` endpoint (HelloHandler.java)                                                                     |
+| Jaehyeok Park  | Member B     | Updated and fixed the HTML client (simple_script2.html)                                                               |
+| Arindam Biswas | Member C     | Updated README documentation                                                                                          |
 
-Example:
+### Week 3 — Docker & Containerisation
 
-git checkout -b add-new-endpoint 4. Make Your Changes
+| Name           | Role         | Responsibilities                                                          |
+| -------------- | ------------ | ------------------------------------------------------------------------- |
+| Hanseong Park  | Team Manager | Managed the repo, reviewed and merged all PRs                             |
+| Abdul Karim    | Member A     | Wrote the Dockerfile to containerise the Java server                      |
+| Shoa           | Member B     | Created Docker Compose setup with Nginx (docker-compose.yml + nginx.conf) |
+| Arindam Biswas | Member C     | Built and pushed the image to Docker Hub                                  |
+| Jaehyeok Park  | Member D     | Added Docker build step to the CI workflow                                |
 
-Add new features, fix bugs, or update documentation.
+### Week 4 — Testing & TDD
 
-5. Commit Your Changes
-   git add .
-   git commit -m "Added new API endpoint"
-6. Push Your Branch
-   git push origin feature-name
-7. Create a Pull Request
+| Name          | Role         | Responsibilities                                        |
+| ------------- | ------------ | ------------------------------------------------------- |
+| Hanseong Park | Team Manager | Managed the repo, reviewed and merged all PRs           |
+| All members   | TBD          | Set up JUnit testing, write unit tests for project code |
 
-Go to the original repository on GitHub and create a Pull Request (PR) from your forked branch.
+---
 
-Your repository leader will then review and merge.
+## How to Contribute
 
--HANSFIXING
+We follow a Fork and Pull Request workflow.
+
+1. Fork the repository
+2. Clone your fork
+3. Create a new branch
+
+```bash
+git checkout -b your-branch-name
+```
+
+4. Make your changes
+5. Commit and push
+
+```bash
+git add .
+git commit -m "Description of change"
+git push origin your-branch-name
+```
+
+6. Open a Pull Request → Team Manager will review and merge
