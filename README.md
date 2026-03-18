@@ -13,6 +13,22 @@ The client (web browser) is provided — our team builds and deploys the server.
 
 ---
 
+## Assessment Details
+
+| Component               | Marks        | Type       |
+| ----------------------- | ------------ | ---------- |
+| Implemented APIs        | 15 marks     | Team       |
+| Code Quality + Testing  | 10 marks     | Team       |
+| DevOps Process          | 5 marks      | Team       |
+| Individual Presentation | 20 marks     | Individual |
+| **Total**               | **50 marks** |            |
+
+**Due Date:** 5 June 2026, 23:55 (Week 13)
+
+**Submission:** Git repository (GitHub) + face-to-face presentation
+
+---
+
 ## What We Need to Build
 
 ### Core APIs
@@ -79,6 +95,29 @@ The client (web browser) is provided — our team builds and deploys the server.
 - **CI/CD:** GitHub Actions
 - **Cloud Deployment:** AWS (Terraform)
 - **Testing:** JUnit 5 + Maven
+
+---
+
+## Project Task Assignment
+
+| Task                                      | Assigned To     | Status  |
+| ----------------------------------------- | --------------- | ------- |
+| Map file setup and map-loading code       | Arindam         | 🔲 Todo |
+| Implement `/move` endpoint                | Jaehyeok        | 🔲 Todo |
+| Implement `/info` endpoint                | Abdul           | 🔲 Todo |
+| Set up Docker, CI, Testing infrastructure | Shoa + Hanseong | 🔲 Todo |
+
+---
+
+## Development Priorities
+
+```
+Step 1: Implement /move and /info endpoints  ← most important
+Step 2: Map file loading
+Step 3: Docker + AWS deployment
+Step 4: CI/CD automation
+Step 5: Write tests
+```
 
 ---
 
@@ -161,17 +200,6 @@ docker compose up -d
 | ------------- | ------------ | ------------------------------------------------------- |
 | Hanseong Park | Team Manager | Managed the repo, reviewed and merged all PRs           |
 | All members   | TBD          | Set up JUnit testing, write unit tests for project code |
-
----
-
-## Project Task Assignment
-
-| Task                                      | Assigned To     | Status  |
-| ----------------------------------------- | --------------- | ------- |
-| Map file setup and map-loading code       | Arindam         | 🔲 Todo |
-| Implement `/move` endpoint                | Jaehyeok        | 🔲 Todo |
-| Implement `/info` endpoint                | Abdul           | 🔲 Todo |
-| Set up Docker, CI, Testing infrastructure | Shoa + Hanseong | 🔲 Todo |
 
 ---
 
