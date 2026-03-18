@@ -1,4 +1,4 @@
-COMP3050
+**COMP3050**
 Available Endpoints
 
 The server currently exposes the following API endpoints:
@@ -16,7 +16,7 @@ Example Response:
   "message": "Hello from COMP3050!"
 }
 
-Description:
+**Description:**
 This endpoint returns a simple greeting message in JSON format to confirm that the server is running correctly.
 
 /test
@@ -42,18 +42,16 @@ This endpoint returns a JSON object containing Olympic medal statistics for a co
 
 
 
-Team Members and Roles
-   Name	              Role	                     Responsibilities
-Arindam Biswas |	                	   |   
-Team Member 2  |                       |  
-Team Member 3	 |                       |  
-Team member 4  |                       |
+**Team Members and Roles**
+   **Name	              Role	                     Responsibilities**
+	                	
+Hanseong Park  | Team Manager          |    Created and managed the team Github repository, coordinated the team workflow, reviewed pull requests, merge                 |                       |     contributions, and set up CI workflow using Github actions
 Abdul Karim    |  Member 2             |   Added a new endpoint
 Jaehyeok Park	 |Update the HTML client |  Manage and check error in HTML client
 Team member 4  |                       |
 team member 5  |                       |
 Arindam Biswas |	  GITHUB DOCUMENTATION |   ADD UPDATE README FILE ACCORDING TO THE PROGRESS AND CURRENT STATE OF PROJECT
-Shoa Akiyama   |                         |  
+Team Member 2  |                         |  
 Team Member 3	 |                         |  
 Team member 4  |                         |
 team member 5  |                         |
