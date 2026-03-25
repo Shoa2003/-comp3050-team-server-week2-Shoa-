@@ -5,9 +5,9 @@
 This is the team project for COMP3050 (Software System Development and Operations)
 at Macquarie University, 2026.
 
-We are building a **Java server** for a 2D tile-based virtual world game.
+We are building a **Java HTTP server** for a 2D tile-based virtual world game.
 The server tracks the player's position on a map and responds to movement
-and information requests from a web-based client.
+and information requests from a web-based client provided by the teaching staff.
 
 The client (web browser) is provided — our team builds and deploys the server.
 
@@ -29,30 +29,70 @@ The client (web browser) is provided — our team builds and deploys the server.
 
 ---
 
-## What We Need to Build
+## API Specification (v1)
 
-### Core APIs
+Based on `COMP3050_Team_project_2026_API_v1.pdf`.
 
-| Endpoint            | Method | Description                                       |
-| ------------------- | ------ | ------------------------------------------------- |
-| `/move?dy=DY&dx=DX` | GET    | Move the player character N/S/E/W                 |
-| `/info?y=Y&x=X`     | GET    | Return map tile data around the player's location |
+### Core Endpoints
+
+| Endpoint            | Method | Description                                         |
+| ------------------- | ------ | --------------------------------------------------- |
+| `/move?dy=DY&dx=DX` | GET    | Move the player character N/S/E/W                   |
+| `/info?y=Y&x=X`     | GET    | Return 11x11 map tile data around player's location |
+
+---
 
 ### `/move` Details
 
-- Moves the player one space in a cardinal direction (N/S/E/W)
-- Returns `200` with new `{y, x}` location if successful
-- Returns `204` if blocked (wall, water, map edge) or invalid (diagonal, >1 space)
+Move the player one space in a cardinal direction.
+
+| Direction     | dy  | dx  |
+| ------------- | --- | --- |
+| North (W / ↑) | -1  | 0   |
+| South (S / ↓) | +1  | 0   |
+| West (A / ←)  | 0   | -1  |
+| East (D / →)  | 0   | +1  |
+
+**Valid requests:**
+
+```
+/move?dy=-1&dx=0   → Move North
+/move?dy=-1        → Move North (dx defaults to 0)
+/move?dx=+1        → Move East  (dy defaults to 0)
+/move?dy=0&dx=0    → No movement (valid)
+/move              → No movement (valid)
+```
+
+**Invalid requests (return 204):**
+
+```
+/move?dy=+1&dx=+1  → Diagonal — invalid
+/move?dy=-2&dx=0   → More than one space — invalid
+```
+
+**Responses:**
+
+- `200` + JSON if move succeeded:
 
 ```json
 { "y": 0, "x": 6 }
 ```
 
+- `204` (empty body) if blocked (wall/water/map edge) or invalid
+
+---
+
 ### `/info` Details
 
-- Returns an 11x11 grid of tile data around the player
-- Returns `200` with tile info if successful
-- Returns `204` if the requested location doesn't match the player's location
+Returns an 11x11 grid of tile data centred on the player.
+
+**Request:**
+
+```
+/info?y=7&x=5
+```
+
+**Response `200`:**
 
 ```json
 {
@@ -63,75 +103,101 @@ The client (web browser) is provided — our team builds and deploys the server.
   "bottom": 12,
   "right": 10,
   "info": [
-    ["g", "g", "W", "W", "g"],
-    ["_", "_", "_", "g", "g"]
+    ["S", "w", "w", "w", "w", "S", "g", "g", "g", "W", "W"],
+    ["S", "w", "w", "w", "w", "S", "g", "g", "W", "W", "g"],
+    ["S", "S", "S", "w", "S", "S", "g", "g", "W", "g", "g"],
+    ["g", "g", ",", "_", "g", "g", "g", "W", "W", "W", "g"],
+    [".", "g", "g", "_", "g", "g", "g", "W", "g", "W", "."],
+    ["_", "_", "_", "_", "g", "g", "W", "W", "g", "W", "W"],
+    ["_", "g", "t", "t", "g", "W", "W", "W", "g", "g", "W"],
+    ["_", "g", "g", "t", "g", "W", "W", "g", "g", "g", "W"],
+    ["_", "g", "g", "g", "g", "g", "g", "g", "g", "g", "W"],
+    ["_", "g", "g", "g", "g", "g", "t", "t", "g", "W", "W"],
+    ["_", "g", "g", "g", "g", "g", "t", "g", "g", "W", ","]
   ]
 }
 ```
+
+**Response `204`** (empty body) if `y` and `x` don't match the player's current location.
+
+---
 
 ### Map Tile Types
 
 | Symbol | Tile          | Blocks Movement? |
 | ------ | ------------- | ---------------- |
-| `B`    | Brick wall    | ✅               |
-| `S`    | Stone wall    | ✅               |
-| `W`    | Water         | ✅               |
-| `D`    | Door (closed) | ✅               |
-| `g`    | Grass         | ❌               |
-| `_`    | Dirt          | ❌               |
-| `d`    | Door (open)   | ❌               |
-| `w`    | Wooden boards | ❌               |
-| `t`    | Tree          | ❌               |
-| `s`    | Sand          | ❌               |
+| `B`    | Brick wall    | ✅ Yes           |
+| `S`    | Stone wall    | ✅ Yes           |
+| `W`    | Water         | ✅ Yes           |
+| `D`    | Door (closed) | ✅ Yes           |
+| `g`    | Grass         | ❌ No            |
+| `_`    | Dirt          | ❌ No            |
+| `d`    | Door (open)   | ❌ No            |
+| `w`    | Wooden boards | ❌ No            |
+| `t`    | Tree          | ❌ No            |
+| `s`    | Sand          | ❌ No            |
+| `f`    | Flagstones    | ❌ No            |
+| `p`    | Pebbles       | ❌ No            |
+| `b`    | Bridge        | ❌ No            |
+| `.`    | One rock      | ❌ No            |
+| `,`    | Two rocks     | ❌ No            |
+| `:`    | Three rocks   | ❌ No            |
+| `;`    | Six rocks     | ❌ No            |
 
 ---
 
 ## Tech Stack
 
-- **Language:** Java 18+
-- **HTTP Server:** Java built-in HttpServer
-- **Containerisation:** Docker
-- **Reverse Proxy:** Nginx
-- **CI/CD:** GitHub Actions
-- **Cloud Deployment:** AWS (Terraform)
-- **Testing:** JUnit 5 + Maven
+| Tool            | Purpose                |
+| --------------- | ---------------------- |
+| Java 18+        | Server language        |
+| Java HttpServer | Built-in HTTP server   |
+| Docker          | Containerisation       |
+| Nginx           | Reverse proxy          |
+| GitHub Actions  | CI/CD pipeline         |
+| AWS + Terraform | Cloud deployment (IaC) |
+| JUnit 5 + Maven | Testing                |
 
 ---
 
 ## Project Task Assignment
 
-| Task                                      | Assigned To     | Status  |
-| ----------------------------------------- | --------------- | ------- |
-| Map file setup and map-loading code       | Arindam         | 🔲 Todo |
-| Implement `/move` endpoint                | Jaehyeok        | 🔲 Todo |
-| Implement `/info` endpoint                | Abdul           | 🔲 Todo |
-| Set up Docker, CI, Testing infrastructure | Shoa + Hanseong | 🔲 Todo |
+| Task                                            | Assigned To | Status         |
+| ----------------------------------------------- | ----------- | -------------- |
+| Map file (`map.txt`) + `GameMap.java`           | Arindam     | 🔲 In Progress |
+| Implement `/move` endpoint (`MoveHandler.java`) | Jaehyeok    | 🔲 In Progress |
+| Implement `/info` endpoint (`InfoHandler.java`) | Abdul       | 🔲 In Progress |
+| Maven setup + JUnit 5 tests                     | Shoa        | 🔲 In Progress |
+| CI/CD update + PR reviews + README              | Hanseong    | 🔲 In Progress |
 
 ---
 
 ## Development Priorities
 
 ```
-Step 1: Implement /move and /info endpoints  ← most important
-Step 2: Map file loading
-Step 3: Docker + AWS deployment
-Step 4: CI/CD automation
-Step 5: Write tests
+Step 1: Implement /move and /info endpoints   ← URGENT (reviewed Week 6)
+Step 2: Map file loading (GameMap.java)
+Step 3: Maven setup + JUnit tests
+Step 4: Docker + CI/CD update
+Step 5: AWS deployment (Terraform)
 ```
 
 ---
 
 ## How to Run
 
-```bash
-# Compile
-javac Test.java HelloHandler.java MyHandler.java
+### Local (without Docker)
 
-# Run
+```bash
+# Compile all Java files
+javac *.java
+
+# Run server
 java Test
 
-# Visit
-http://localhost:8000/test
+# Test in browser
+http://localhost:8000/move?dy=0&dx=1
+http://localhost:8000/info?y=5&x=5
 ```
 
 ### With Docker
@@ -141,35 +207,30 @@ docker build -t comp3050-server .
 docker run -d -p 8000:8000 comp3050-server
 ```
 
-### With Docker Compose
+### With Docker Compose (includes Nginx)
 
 ```bash
 docker compose up -d
 ```
 
+### With Maven (after pom.xml is set up)
+
+```bash
+mvn compile
+mvn test
+mvn exec:java
+```
+
 ---
 
-## Available Endpoints (Current)
+## Current Endpoints
 
-### GET /test
-
-```json
-{
-  "name": "Japan",
-  "gold": 27,
-  "silver": 14,
-  "bronze": 17,
-  "total": 58
-}
-```
-
-### GET /hello
-
-```json
-{
-  "message": "Hello from COMP3050!"
-}
-```
+| Endpoint     | Status     | Response                             |
+| ------------ | ---------- | ------------------------------------ |
+| `GET /test`  | ✅ Working | `{"name":"Japan", ...}`              |
+| `GET /hello` | ✅ Working | `{"message":"Hello from COMP3050!"}` |
+| `GET /move`  | 🔲 Pending | `{"y": Y, "x": X}` or 204            |
+| `GET /info`  | 🔲 Pending | 11x11 tile grid JSON or 204          |
 
 ---
 
@@ -196,10 +257,23 @@ docker compose up -d
 
 ### Week 4 — Testing & TDD
 
-| Name          | Role         | Responsibilities                                        |
-| ------------- | ------------ | ------------------------------------------------------- |
-| Hanseong Park | Team Manager | Managed the repo, reviewed and merged all PRs           |
-| All members   | TBD          | Set up JUnit testing, write unit tests for project code |
+| Name           | Role         | Responsibilities                                                 |
+| -------------- | ------------ | ---------------------------------------------------------------- |
+| Hanseong Park  | Team Manager | Managed the repo, reviewed and merged all PRs                    |
+| Abdul Karim    | Member A     | Wrote JUnit tests for coordinate boundary handling               |
+| Jaehyeok Park  | Member B     | Wrote JUnit tests for move validation logic                      |
+| Arindam Biswas | Member C     | Wrote JUnit tests for map loading and tile type checks           |
+| Shoa           | Member D     | Set up Maven project structure and JUnit 5 dependency in pom.xml |
+
+### Week 5 — Core API Implementation
+
+| Name           | Role         | Responsibilities                                                                                                  |
+| -------------- | ------------ | ----------------------------------------------------------------------------------------------------------------- |
+| Hanseong Park  | Team Manager | Updated CI pipeline, reviewed and merged PRs, coordinated task assignments for `/move` and `/info` implementation |
+| Abdul Karim    | Member A     | Started implementation of `/info` endpoint (InfoHandler.java)                                                     |
+| Jaehyeok Park  | Member B     | Started implementation of `/move` endpoint (MoveHandler.java)                                                     |
+| Arindam Biswas | Member C     | Started map file creation (map.txt) and GameMap.java loader                                                       |
+| Shoa           | Member D     | Maven project setup and initial JUnit test structure                                                              |
 
 ---
 
@@ -220,8 +294,19 @@ git checkout -b your-branch-name
 
 ```bash
 git add .
-git commit -m "Description of change"
+git commit -m "feat: description of change"
 git push origin your-branch-name
 ```
 
-6. Open a Pull Request → Team Manager will review and merge
+6. Open a Pull Request → Team Manager (Hanseong) will review and merge
+
+### Commit Message Convention
+
+```
+feat: add new feature
+fix: bug fix
+docs: documentation update
+test: add or update tests
+ci: CI/CD changes
+refactor: code refactoring
+```
