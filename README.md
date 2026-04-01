@@ -152,52 +152,50 @@ Returns an 11x11 grid of tile data centred on the player.
 | --------------- | ---------------------- |
 | Java 18+        | Server language        |
 | Java HttpServer | Built-in HTTP server   |
+| Maven           | Build & dependency management |
+| JUnit 5         | Unit testing           |
 | Docker          | Containerisation       |
 | Nginx           | Reverse proxy          |
 | GitHub Actions  | CI/CD pipeline         |
 | AWS + Terraform | Cloud deployment (IaC) |
-| JUnit 5 + Maven | Testing                |
 
 ---
 
 ## Project Task Assignment
 
-| Task                                            | Assigned To | Status         |
-| ----------------------------------------------- | ----------- | -------------- |
-| Map file (`map.txt`) + `GameMap.java`           | Arindam     | 🔲 In Progress |
-| Implement `/move` endpoint (`MoveHandler.java`) | Jaehyeok    | 🔲 In Progress |
-| Implement `/info` endpoint (`InfoHandler.java`) | Abdul       | 🔲 In Progress |
-| Maven setup + JUnit 5 tests                     | Shoa        | 🔲 In Progress |
-| CI/CD update + PR reviews + README              | Hanseong    | 🔲 In Progress |
+| Task                                            | Assigned To | Status   |
+| ----------------------------------------------- | ----------- | -------- |
+| Map file (`map.txt`) + `GameMap.java`           | Arindam     | ✅ Done  |
+| Implement `/move` endpoint (`MoveHandler.java`) | Jaehyeok    | ✅ Done  |
+| Implement `/info` endpoint (`InfoHandler.java`) | Hanseong    | ✅ Done  |
+| Maven setup + JUnit 5 tests                     | Hanseong    | ✅ Done  |
+| CI/CD update + Docker + README                  | Hanseong    | ✅ Done  |
+| AWS deployment (Terraform)                      | TBD         | 🔲 Next  |
 
 ---
 
 ## Development Priorities
 
 ```
-Step 1: Implement /move and /info endpoints   ← URGENT (reviewed Week 6)
-Step 2: Map file loading (GameMap.java)
-Step 3: Maven setup + JUnit tests
-Step 4: Docker + CI/CD update
-Step 5: AWS deployment (Terraform)
+Step 1: Implement /move and /info endpoints   ✅ Done
+Step 2: Map file loading (GameMap.java)       ✅ Done
+Step 3: Maven setup + JUnit tests             ✅ Done
+Step 4: Docker + CI/CD update                 ✅ Done
+Step 5: AWS deployment (Terraform)            ← Next
 ```
 
 ---
 
 ## How to Run
 
-### Local (without Docker)
+### Local (Maven)
 
 ```bash
-# Compile all Java files
-javac *.java
+# Run tests
+JAVA_HOME="/c/Program Files/Eclipse Adoptium/jdk-21.0.8.9-hotspot" ./mvnw test
 
-# Run server
-java Test
-
-# Test in browser
-http://localhost:8000/move?dy=0&dx=1
-http://localhost:8000/info?y=5&x=5
+# Compile only
+JAVA_HOME="/c/Program Files/Eclipse Adoptium/jdk-21.0.8.9-hotspot" ./mvnw compile
 ```
 
 ### With Docker
@@ -213,24 +211,16 @@ docker run -d -p 8000:8000 comp3050-server
 docker compose up -d
 ```
 
-### With Maven (after pom.xml is set up)
-
-```bash
-mvn compile
-mvn test
-mvn exec:java
-```
-
 ---
 
 ## Current Endpoints
 
-| Endpoint     | Status     | Response                             |
-| ------------ | ---------- | ------------------------------------ |
-| `GET /test`  | ✅ Working | `{"name":"Japan", ...}`              |
-| `GET /hello` | ✅ Working | `{"message":"Hello from COMP3050!"}` |
-| `GET /move`  | 🔲 Pending | `{"y": Y, "x": X}` or 204            |
-| `GET /info`  | 🔲 Pending | 11x11 tile grid JSON or 204          |
+| Endpoint     | Status      | Response                             |
+| ------------ | ----------- | ------------------------------------ |
+| `GET /test`  | ✅ Working  | `{"name":"Japan", ...}`              |
+| `GET /hello` | ✅ Working  | `{"message":"Hello from COMP3050!"}` |
+| `GET /move`  | ✅ Working  | `{"y": Y, "x": X}` or 204           |
+| `GET /info`  | ✅ Working  | 11x11 tile grid JSON or 204          |
 
 ---
 
@@ -274,6 +264,12 @@ mvn exec:java
 | Jaehyeok Park  | Member B     | Started implementation of `/move` endpoint (MoveHandler.java)                                                     |
 | Arindam Biswas | Member C     | Started map file creation (map.txt) and GameMap.java loader                                                       |
 | Shoa           | Member D     | Maven project setup and initial JUnit test structure                                                              |
+
+### Week 6 — Integration & CI/CD Fix
+
+| Name          | Role         | Responsibilities                                                                                          |
+| ------------- | ------------ | --------------------------------------------------------------------------------------------------------- |
+| Hanseong Park | Team Manager | Implemented `/info` endpoint (InfoHandler.java), Maven structure, JUnit tests, CI/CD update, coordinated all PRs |
 
 ---
 
