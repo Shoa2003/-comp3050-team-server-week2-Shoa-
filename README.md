@@ -167,8 +167,8 @@ Returns an 11x11 grid of tile data centred on the player.
 | ----------------------------------------------- | ----------- | -------- |
 | Map file (`map.txt`) + `GameMap.java`           | Arindam     | ✅ Done  |
 | Implement `/move` endpoint (`MoveHandler.java`) | Jaehyeok    | ✅ Done  |
-| Implement `/info` endpoint (`InfoHandler.java`) | Hanseong    | ✅ Done  |
-| Maven setup + JUnit 5 tests                     | Hanseong    | ✅ Done  |
+| Implement `/info` endpoint (`InfoHandler.java`) |Abdul    | ✅ Done  |
+| Maven setup + JUnit 5 tests                     | Shoa    | ✅ Done  |
 | CI/CD update + Docker + README                  | Hanseong    | ✅ Done  |
 | AWS deployment (Terraform)                      | TBD         | 🔲 Next  |
 
