@@ -21,7 +21,7 @@ jobs:
           java-version: '17'
 
       - name: Compile Java files
-        run: javac Test.java HelloHandler.java MyHandler.java
+        run: javac *.java
 
       - name: Build Docker image
         run: docker build . --file Dockerfile --tag team-server:latest
