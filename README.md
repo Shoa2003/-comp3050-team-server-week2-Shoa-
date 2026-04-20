@@ -271,6 +271,15 @@ docker compose up -d
 | ------------- | ------------ | --------------------------------------------------------------------------------------------------------- |
 | Hanseong Park | Team Manager | Implemented `/info` endpoint (InfoHandler.java), Maven structure, JUnit tests, CI/CD update, coordinated all PRs |
 
+### Week 6 — DevSecOps
+
+| Name           | Role         | Responsibilities                                                   |
+| -------------- | ------------ | ------------------------------------------------------------------ |
+| Hanseong Park  | Team Manager | CI security jobs (Semgrep + Trivy), secrets management, PR reviews |
+| Abdul Karim    | Member A     | SessionManager.java, LoginHandler.java, LogoutHandler.java         |
+| Jaehyeok Park  | Member B     | Semgrep scan + screenshot                                          |
+| Arindam Biswas | Member C     | Trivy scan + Dockerfile multi-stage update                         |
+
 ---
 
 ## How to Contribute

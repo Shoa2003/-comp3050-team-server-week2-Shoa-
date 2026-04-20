@@ -25,3 +25,26 @@ jobs:
 
       - name: Build Docker image
         run: docker build . --file Dockerfile --tag team-server:latest
+
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install and run Semgrep
+        run: |
+          pip install semgrep
+          semgrep --config auto --error src/main/java/
+
+      - name: Build Docker image
+        run: docker build . --file Dockerfile --tag comp3050-server
+
+      - name: Install Trivy v0.69.3
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.69.3
+
+      - name: Run Trivy vulnerability scan
+        run: |
+          trivy image --severity HIGH,CRITICAL --exit-code 1 comp3050-server
