@@ -275,6 +275,76 @@ docker compose up -d
 | Shoa           | Member C     | Created .semgrep.yml custom rule file for hardcoded credential detection         |
 | Arindam Biswas | Member D     | Ran Trivy Docker image scan, updated Dockerfile to multi-stage build             |
 
+### Week 7 — AWS Cloud Deployment
+
+| Name           | Role         | Responsibilities                                                                          |
+| -------------- | ------------ | ----------------------------------------------------------------------------------------- |
+| Hanseong Park  | Team Manager | EC2 instance management, project planning, reviewed and merged all PRs                    |
+| Arindam Biswas | Member A     | Challenge 2.1: Installed nginx on EC2 (without Docker)                                    |
+| Abdul Karim    | Member B     | Challenge 2.2: Installed Docker on EC2, ran nginx container                               |
+| Shoa           | Member C     | Challenge 2.3 Part A: Compiled Java files locally, uploaded .class files to EC2 via sftp |
+| Jaehyeok Park  | Member D     | Challenge 2.3 Part B: Installed Java on EC2, ran Java server, verified endpoints          |
+
+---
+
+## Week 7 – AWS Cloud Deployment
+
+### Cloud Infrastructure
+
+| Property        | Value                       |
+| --------------- | --------------------------- |
+| Cloud Provider  | AWS EC2                     |
+| Region          | Asia Pacific (Sydney)       |
+| Instance Type   | t3.micro                    |
+| OS              | Amazon Linux 2023           |
+| Instance Name   | team-game-server            |
+
+### Security Group (Firewall Rules)
+
+| Port | Protocol | Purpose         | Access          |
+| ---- | -------- | --------------- | --------------- |
+| 22   | TCP      | SSH             | Team Manager only |
+| 80   | TCP      | HTTP (nginx)    | Open to all     |
+| 8000 | TCP      | Java server     | Open to all     |
+
+### Deployment Workflow
+
+How we get the server running on EC2:
+
+1. Compile locally:
+   ```bash
+   javac *.java
+   ```
+2. Transfer `.class` files to EC2 via sftp (`.java` source files are not uploaded — trade secret protection):
+   ```bash
+   sftp -i team-key.pem ec2-user@EC2_PUBLIC_IP
+   put *.class
+   ```
+3. SSH into EC2:
+   ```bash
+   ssh -i team-key.pem ec2-user@EC2_PUBLIC_IP
+   ```
+4. Run the Java server:
+   ```bash
+   java Test
+   ```
+5. Verify endpoints in browser or curl:
+   ```
+   http://EC2_PUBLIC_IP:8000/hello
+   ```
+
+### Credential Management
+
+- The `.pem` key file is held exclusively by the Team Manager (Hanseong)
+- Teammates access the running server via the public IP only — no `.pem` sharing
+- The `.pem` file is never committed to the repository
+
+### AWS Credit Management
+
+- **Personal training instances:** stop or terminate after each workshop session
+- **Team project instance:** stop when not actively developing
+- Never leave instances running unattended — idle EC2 time burns credits with no benefit
+
 ---
 
 ## How to Contribute
