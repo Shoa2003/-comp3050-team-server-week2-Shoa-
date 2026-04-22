@@ -20,7 +20,8 @@ public class MoveHandler implements HttpHandler {
         int dy = 0;
         int dx = 0;
 
-        // Parse query string like ?dy=-1&dx=0
+        // Parse the URL query string to get movement distances (e.g., ?dy=-1&dx=0)
+        // If the user sends an empty request (/move), it safely defaults to 0 for both dy and dx, meaning no movement.
         if (query != null) {
             String[] params = query.split("&");
             for (String param : params) {
@@ -35,7 +36,9 @@ public class MoveHandler implements HttpHandler {
             }
         }
 
-        // Prevent diagonal movement or jumping multiple tiles
+        // Validate movement distance
+        // This prevents the player from moving diagonally or jumping multiple tiles at once
+        // (e.g., |dy| + |dx| must be 1 or 0)
         if (Math.abs(dy) + Math.abs(dx) > 1) {
             send204(he);
             return;
@@ -44,18 +47,20 @@ public class MoveHandler implements HttpHandler {
         int targetY = Test.playerY + dy;
         int targetX = Test.playerX + dx;
 
-        // Check map boundaries and obstacles using GameMap
+        // Security check: Ensure the new coordinates do not exceed the map boundaries
+        // This prevents ArrayIndexOutOfBounds exceptions when rendering the map
         if (!GameMap.isInBounds(targetY, targetX)) {
             send204(he);
             return;
         }
 
+        // Collision check: Check if the target tile is a wall, water, or locked door
         if (GameMap.isBlocking(targetY, targetX)) {
             send204(he);
             return;
         }
 
-        // Update current position if all checks pass
+        // If all checks pass, update the player's position
         Test.playerY = targetY;
         Test.playerX = targetX;
 
