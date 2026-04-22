@@ -265,11 +265,15 @@ docker compose up -d
 | Arindam Biswas | Member C     | Started map file creation (map.txt) and GameMap.java loader                                                       |
 | Shoa           | Member D     | Maven project setup and initial JUnit test structure                                                              |
 
-### Week 6 — Integration & CI/CD Fix
+### Week 6 — DevSecOps
 
-| Name          | Role         | Responsibilities                                                                                          |
-| ------------- | ------------ | --------------------------------------------------------------------------------------------------------- |
-| Hanseong Park | Team Manager | Implemented `/info` endpoint (InfoHandler.java), Maven structure, JUnit tests, CI/CD update, coordinated all PRs |
+| Name           | Role         | Responsibilities                                                                 |
+| -------------- | ------------ | -------------------------------------------------------------------------------- |
+| Hanseong Park  | Team Manager | CI/CD security pipeline (Semgrep + Trivy), secrets management (.env + .gitignore), reviewed and merged all PRs |
+| Abdul Karim    | Member A     | Created SessionManager.java, LoginHandler.java, LogoutHandler.java               |
+| Jaehyeok Park  | Member B     | Installed Semgrep, ran source code scan, documented results                      |
+| Shoa           | Member C     | Created .semgrep.yml custom rule file for hardcoded credential detection         |
+| Arindam Biswas | Member D     | Ran Trivy Docker image scan, updated Dockerfile to multi-stage build             |
 
 ---
 
