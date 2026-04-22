@@ -43,7 +43,7 @@ jobs:
 
       - name: Install Trivy v0.69.3
         run: |
-          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.69.3
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/refs/tags/v0.69.3/contrib/install.sh | sh -s -- -b /usr/local/bin v0.69.3
 
       - name: Run Trivy vulnerability scan
         run: |
