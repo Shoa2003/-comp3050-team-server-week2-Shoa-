@@ -50,9 +50,12 @@ public class InfoHandler implements HttpHandler {
             info.append("[");
             for (int col = left; col <= right; col++) {
                 if (col > left) info.append(",");
-                String tile = GameMap.isInBounds(row, col)
-                        ? String.valueOf(GameMap.getTile(row, col))
-                        : "g";
+                String tile;
+                if (GameMap.isInBounds(row, col)) {
+                    tile = String.valueOf(GameMap.getTile(row, col));
+                } else {
+                    tile = " ";
+                }
                 info.append("\"").append(tile).append("\"");
             }
             info.append("]");
@@ -65,6 +68,7 @@ public class InfoHandler implements HttpHandler {
         );
 
         he.getResponseHeaders().set("Content-Type", "application/json");
+        he.getResponseHeaders().set("Connection", "close");
         he.sendResponseHeaders(200, response.getBytes().length);
         OutputStream os = he.getResponseBody();
         os.write(response.getBytes());
