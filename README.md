@@ -2,14 +2,48 @@
 
 ## Project Overview
 
-This is the team project for COMP3050 (Software System Development and Operations)
-at Macquarie University, 2026.
+This is the team project for **COMP3050 – Software System Development and Operations** at Macquarie University, 2026.
 
-We are building a **Java HTTP server** for a 2D tile-based virtual world game.
-The server tracks the player's position on a map and responds to movement
-and information requests from a web-based client provided by the teaching staff.
+### What We're Building
 
-The client (web browser) is provided — our team builds and deploys the server.
+A **Java HTTP game server** for a 2D tile-based virtual world. The server communicates with a web-based client via a **REST API (API v3)**. The client and tile images are provided by the teaching staff — our team designs, builds, and deploys the server.
+
+### API Endpoints
+
+| Endpoint        | Method | Description                                            |
+| --------------- | ------ | ------------------------------------------------------ |
+| `/login`        | POST   | Verify name + encrypted password, return session token |
+| `/logout`       | GET    | Invalidate session token                               |
+| `/move?dy=&dx=` | GET    | Move character N/S/E/W                                 |
+| `/info?y=&x=`   | GET    | Return map tile data around player's location          |
+| `/take`         | GET    | Pick up item at player's location                      |
+| `/place`        | GET    | Drop item from inventory                               |
+| `/use?dy=&dx=`  | GET    | Interact with adjacent map element (e.g. open a door)  |
+
+### Tech Stack
+
+| Tool                     | Purpose                       |
+| ------------------------ | ----------------------------- |
+| Java                     | Server language               |
+| Maven                    | Build & dependency management |
+| Docker                   | Containerisation              |
+| GitHub Actions           | CI/CD pipeline                |
+| AWS EC2 (ap-southeast-2) | Cloud deployment              |
+| Terraform                | Infrastructure as Code        |
+| Trivy, Semgrep           | Security scanning             |
+
+### Weekly Progress
+
+| Week | Topic             | What We Built                                        |
+| ---- | ----------------- | ---------------------------------------------------- |
+| 1    | Java HTTP server  | Basic `/test` and `/hello` endpoints                 |
+| 2    | Git + GitHub + CI | Team workflow, GitHub Actions pipeline               |
+| 3    | Docker            | Containerised the server                             |
+| 4    | JUnit testing     | Automated tests with Maven                           |
+| 5    | Kubernetes        | Container orchestration                              |
+| 6    | DevSecOps         | Trivy and Semgrep security scanning in CI            |
+| 7    | AWS EC2           | Cloud deployment to ap-southeast-2 (Sydney)          |
+| 8    | Terraform         | Infrastructure as Code, automated EC2 deployment     |
 
 ---
 
@@ -344,6 +378,63 @@ How we get the server running on EC2:
 - **Personal training instances:** stop or terminate after each workshop session
 - **Team project instance:** stop when not actively developing
 - Never leave instances running unattended — idle EC2 time burns credits with no benefit
+
+---
+
+## Week 8 – Infrastructure as Code (Terraform)
+
+### Overview
+
+Infrastructure as Code (IaC) means defining cloud resources in configuration files rather than configuring them manually through a web console. We use **Terraform v1.14.9** to provision and manage our AWS environment, making deployments reproducible, version-controlled, and automatable — eliminating the need to click through the AWS console each time.
+
+### What Was Automated
+
+| Resource       | Configuration                                              |
+| -------------- | ---------------------------------------------------------- |
+| EC2 Instance   | t3.micro, Amazon Linux 2023, ap-southeast-2                |
+| Security Group | Ports 22 (SSH), 80 (HTTP), 8000 (game server)             |
+| Software setup | Docker + game server container installed via `user_data`   |
+
+### How to Deploy
+
+**Initialise Terraform (first time only):**
+
+```bash
+terraform init
+```
+
+**Preview changes before applying:**
+
+```bash
+terraform plan -var="key_pair_name=YOUR_KEY"
+```
+
+**Provision the infrastructure:**
+
+```bash
+terraform apply -var="key_pair_name=YOUR_KEY"
+```
+
+**Tear down all resources after testing:**
+
+```bash
+terraform destroy -var="key_pair_name=YOUR_KEY"
+```
+
+### Important Notes
+
+- **Never commit `terraform.tfstate`** — it contains sensitive resource metadata
+- **Never commit `.tfvars` files or AWS credentials** — treat them like passwords
+- **Always run `terraform destroy` after testing** — idle EC2 instances consume AWS credits
+
+### Team Task Breakdown
+
+| Member   | Challenge   | Task                                                        |
+| -------- | ----------- | ----------------------------------------------------------- |
+| Hans     | 3.1 + 3.4   | Terraform tutorial setup + Git repository configuration     |
+| Abdul    | 3.2         | Replace nginx with game server Docker image in Terraform    |
+| Arindam  | 3.2 support | Confirm Docker image, test game server endpoint on EC2      |
+| Jaehyeok | 3.3         | Add `instance_type` and `ssh_location` input variables      |
 
 ---
 
