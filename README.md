@@ -34,16 +34,65 @@ A **Java HTTP game server** for a 2D tile-based virtual world. The server commun
 
 ### Weekly Progress
 
-| Week | Topic             | What We Built                                        |
-| ---- | ----------------- | ---------------------------------------------------- |
-| 1    | Java HTTP server  | Basic `/test` and `/hello` endpoints                 |
-| 2    | Git + GitHub + CI | Team workflow, GitHub Actions pipeline               |
-| 3    | Docker            | Containerised the server                             |
-| 4    | JUnit testing     | Automated tests with Maven                           |
-| 5    | Kubernetes        | Container orchestration                              |
-| 6    | DevSecOps         | Trivy and Semgrep security scanning in CI            |
-| 7    | AWS EC2           | Cloud deployment to ap-southeast-2 (Sydney)          |
-| 8    | Terraform         | Infrastructure as Code, automated EC2 deployment     |
+| Week | Topic             | What We Built                                                  |
+| ---- | ----------------- | -------------------------------------------------------------- |
+| 1    | Java HTTP server  | Basic `/test` and `/hello` endpoints                           |
+| 2    | Git + GitHub + CI | Team workflow, GitHub Actions pipeline                         |
+| 3    | Docker            | Containerised the server                                       |
+| 4    | JUnit testing     | Automated tests with Maven                                     |
+| 5    | Kubernetes        | Container orchestration                                        |
+| 6    | DevSecOps         | Trivy and Semgrep security scanning in CI                      |
+| 7    | AWS EC2           | Cloud deployment to ap-southeast-2 (Sydney)                    |
+| 8    | Terraform         | Infrastructure as Code, automated EC2 deployment               |
+| 9    | CI/CD Pipelines   | Automated build, push, and deploy pipeline with GitHub Actions |
+
+---
+
+## Week 9 – CI/CD Pipeline
+
+### Overview
+
+Automated CI/CD pipeline using GitHub Actions. Every push to main automatically builds a Docker image, pushes it to Docker Hub, and deploys it to AWS EC2 — with no manual steps.
+
+### Pipeline Flow
+
+git push → GitHub Actions triggered → Build Docker image → Push to Docker Hub → SSH into EC2 → Pull new image → Restart container → Live at http://13.211.11.188:8000
+
+### What Was Automated
+
+| Step           | Tool                      | What happens                                        |
+| -------------- | ------------------------- | --------------------------------------------------- |
+| Build          | GitHub Actions + Docker   | Java server compiled and packaged into Docker image |
+| Push           | Docker Hub                | Image stored at hansmq/game-server:latest           |
+| Deploy         | SSH + appleboy/ssh-action | EC2 pulls new image and restarts container          |
+| Infrastructure | Terraform + Elastic IP    | Stable address: 13.211.11.188                       |
+
+### Verified Endpoints
+
+| Endpoint | URL                                    | Status     |
+| -------- | -------------------------------------- | ---------- |
+| /info    | http://13.211.11.188:8000/info?y=5&x=5 | ✅ Working |
+| /move    | http://13.211.11.188:8000/move         | ✅ Working |
+| /hello   | http://13.211.11.188:8000/hello        | ✅ Working |
+
+### GitHub Secrets Used
+
+| Secret              | Purpose                        |
+| ------------------- | ------------------------------ |
+| DOCKERHUB_USERNAME  | Docker Hub login               |
+| DOCKERHUB_TOKEN     | Docker Hub access token        |
+| EC2_SSH_PRIVATE_KEY | SSH private key for EC2 access |
+| EC2_HOST            | Elastic IP: 13.211.11.188      |
+
+### Team Task Breakdown
+
+| Member          | Challenge   | Task                                                                               |
+| --------------- | ----------- | ---------------------------------------------------------------------------------- |
+| Hanseong (Hans) | 4.1         | Full CI/CD pipeline setup, Secrets configuration, Terraform Elastic IP, deploy.yml |
+| Abdul           | 4.2         | Add test job to pipeline (Test → Build → Deploy)                                   |
+| Arindam         | 4.3         | .dockerignore improvements for source code protection                              |
+| Jaehyeok        | 4.4         | Infrastructure automation discussion                                               |
+| Shoa            | 4.2 support | Verify mvn test passes locally                                                     |
 
 ---
 
@@ -182,29 +231,29 @@ Returns an 11x11 grid of tile data centred on the player.
 
 ## Tech Stack
 
-| Tool            | Purpose                |
-| --------------- | ---------------------- |
-| Java 18+        | Server language        |
-| Java HttpServer | Built-in HTTP server   |
+| Tool            | Purpose                       |
+| --------------- | ----------------------------- |
+| Java 18+        | Server language               |
+| Java HttpServer | Built-in HTTP server          |
 | Maven           | Build & dependency management |
-| JUnit 5         | Unit testing           |
-| Docker          | Containerisation       |
-| Nginx           | Reverse proxy          |
-| GitHub Actions  | CI/CD pipeline         |
-| AWS + Terraform | Cloud deployment (IaC) |
+| JUnit 5         | Unit testing                  |
+| Docker          | Containerisation              |
+| Nginx           | Reverse proxy                 |
+| GitHub Actions  | CI/CD pipeline                |
+| AWS + Terraform | Cloud deployment (IaC)        |
 
 ---
 
 ## Project Task Assignment
 
-| Task                                            | Assigned To | Status   |
-| ----------------------------------------------- | ----------- | -------- |
-| Map file (`map.txt`) + `GameMap.java`           | Arindam     | ✅ Done  |
-| Implement `/move` endpoint (`MoveHandler.java`) | Jaehyeok    | ✅ Done  |
-| Implement `/info` endpoint (`InfoHandler.java`) |Abdul    | ✅ Done  |
-| Maven setup + JUnit 5 tests                     | Shoa    | ✅ Done  |
-| CI/CD update + Docker + README                  | Hanseong    | ✅ Done  |
-| AWS deployment (Terraform)                      | TBD         | 🔲 Next  |
+| Task                                            | Assigned To | Status  |
+| ----------------------------------------------- | ----------- | ------- |
+| Map file (`map.txt`) + `GameMap.java`           | Arindam     | ✅ Done |
+| Implement `/move` endpoint (`MoveHandler.java`) | Jaehyeok    | ✅ Done |
+| Implement `/info` endpoint (`InfoHandler.java`) | Abdul       | ✅ Done |
+| Maven setup + JUnit 5 tests                     | Shoa        | ✅ Done |
+| CI/CD update + Docker + README                  | Hanseong    | ✅ Done |
+| AWS deployment (Terraform)                      | TBD         | 🔲 Next |
 
 ---
 
@@ -249,12 +298,12 @@ docker compose up -d
 
 ## Current Endpoints
 
-| Endpoint     | Status      | Response                             |
-| ------------ | ----------- | ------------------------------------ |
-| `GET /test`  | ✅ Working  | `{"name":"Japan", ...}`              |
-| `GET /hello` | ✅ Working  | `{"message":"Hello from COMP3050!"}` |
-| `GET /move`  | ✅ Working  | `{"y": Y, "x": X}` or 204           |
-| `GET /info`  | ✅ Working  | 11x11 tile grid JSON or 204          |
+| Endpoint     | Status     | Response                             |
+| ------------ | ---------- | ------------------------------------ |
+| `GET /test`  | ✅ Working | `{"name":"Japan", ...}`              |
+| `GET /hello` | ✅ Working | `{"message":"Hello from COMP3050!"}` |
+| `GET /move`  | ✅ Working | `{"y": Y, "x": X}` or 204            |
+| `GET /info`  | ✅ Working | 11x11 tile grid JSON or 204          |
 
 ---
 
@@ -301,23 +350,23 @@ docker compose up -d
 
 ### Week 6 — DevSecOps
 
-| Name           | Role         | Responsibilities                                                                 |
-| -------------- | ------------ | -------------------------------------------------------------------------------- |
+| Name           | Role         | Responsibilities                                                                                               |
+| -------------- | ------------ | -------------------------------------------------------------------------------------------------------------- |
 | Hanseong Park  | Team Manager | CI/CD security pipeline (Semgrep + Trivy), secrets management (.env + .gitignore), reviewed and merged all PRs |
-| Abdul Karim    | Member A     | Created SessionManager.java, LoginHandler.java, LogoutHandler.java               |
-| Jaehyeok Park  | Member B     | Installed Semgrep, ran source code scan, documented results                      |
-| Shoa           | Member C     | Created .semgrep.yml custom rule file for hardcoded credential detection         |
-| Arindam Biswas | Member D     | Ran Trivy Docker image scan, updated Dockerfile to multi-stage build             |
+| Abdul Karim    | Member A     | Created SessionManager.java, LoginHandler.java, LogoutHandler.java                                             |
+| Jaehyeok Park  | Member B     | Installed Semgrep, ran source code scan, documented results                                                    |
+| Shoa           | Member C     | Created .semgrep.yml custom rule file for hardcoded credential detection                                       |
+| Arindam Biswas | Member D     | Ran Trivy Docker image scan, updated Dockerfile to multi-stage build                                           |
 
 ### Week 7 — AWS Cloud Deployment
 
-| Name           | Role         | Responsibilities                                                                          |
-| -------------- | ------------ | ----------------------------------------------------------------------------------------- |
-| Hanseong Park  | Team Manager | EC2 instance management, project planning, reviewed and merged all PRs                    |
-| Arindam Biswas | Member A     | Challenge 2.1: Installed nginx on EC2 (without Docker)                                    |
-| Abdul Karim    | Member B     | Challenge 2.2: Installed Docker on EC2, ran nginx container                               |
+| Name           | Role         | Responsibilities                                                                         |
+| -------------- | ------------ | ---------------------------------------------------------------------------------------- |
+| Hanseong Park  | Team Manager | EC2 instance management, project planning, reviewed and merged all PRs                   |
+| Arindam Biswas | Member A     | Challenge 2.1: Installed nginx on EC2 (without Docker)                                   |
+| Abdul Karim    | Member B     | Challenge 2.2: Installed Docker on EC2, ran nginx container                              |
 | Shoa           | Member C     | Challenge 2.3 Part A: Compiled Java files locally, uploaded .class files to EC2 via sftp |
-| Jaehyeok Park  | Member D     | Challenge 2.3 Part B: Installed Java on EC2, ran Java server, verified endpoints          |
+| Jaehyeok Park  | Member D     | Challenge 2.3 Part B: Installed Java on EC2, ran Java server, verified endpoints         |
 
 ---
 
@@ -325,21 +374,21 @@ docker compose up -d
 
 ### Cloud Infrastructure
 
-| Property        | Value                       |
-| --------------- | --------------------------- |
-| Cloud Provider  | AWS EC2                     |
-| Region          | Asia Pacific (Sydney)       |
-| Instance Type   | t3.micro                    |
-| OS              | Amazon Linux 2023           |
-| Instance Name   | team-game-server            |
+| Property       | Value                 |
+| -------------- | --------------------- |
+| Cloud Provider | AWS EC2               |
+| Region         | Asia Pacific (Sydney) |
+| Instance Type  | t3.micro              |
+| OS             | Amazon Linux 2023     |
+| Instance Name  | team-game-server      |
 
 ### Security Group (Firewall Rules)
 
-| Port | Protocol | Purpose         | Access          |
-| ---- | -------- | --------------- | --------------- |
-| 22   | TCP      | SSH             | Team Manager only |
-| 80   | TCP      | HTTP (nginx)    | Open to all     |
-| 8000 | TCP      | Java server     | Open to all     |
+| Port | Protocol | Purpose      | Access            |
+| ---- | -------- | ------------ | ----------------- |
+| 22   | TCP      | SSH          | Team Manager only |
+| 80   | TCP      | HTTP (nginx) | Open to all       |
+| 8000 | TCP      | Java server  | Open to all       |
 
 ### Deployment Workflow
 
@@ -389,11 +438,11 @@ Infrastructure as Code (IaC) means defining cloud resources in configuration fil
 
 ### What Was Automated
 
-| Resource       | Configuration                                              |
-| -------------- | ---------------------------------------------------------- |
-| EC2 Instance   | t3.micro, Amazon Linux 2023, ap-southeast-2                |
-| Security Group | Ports 22 (SSH), 80 (HTTP), 8000 (game server)             |
-| Software setup | Docker + game server container installed via `user_data`   |
+| Resource       | Configuration                                            |
+| -------------- | -------------------------------------------------------- |
+| EC2 Instance   | t3.micro, Amazon Linux 2023, ap-southeast-2              |
+| Security Group | Ports 22 (SSH), 80 (HTTP), 8000 (game server)            |
+| Software setup | Docker + game server container installed via `user_data` |
 
 ### How to Deploy
 
@@ -429,12 +478,12 @@ terraform destroy -var="key_pair_name=YOUR_KEY"
 
 ### Team Task Breakdown
 
-| Member   | Challenge   | Task                                                        |
-| -------- | ----------- | ----------------------------------------------------------- |
-| Hans     | 3.1 + 3.4   | Terraform tutorial setup + Git repository configuration     |
-| Abdul    | 3.2         | Replace nginx with game server Docker image in Terraform    |
-| Arindam  | 3.2 support | Confirm Docker image, test game server endpoint on EC2      |
-| Jaehyeok | 3.3         | Add `instance_type` and `ssh_location` input variables      |
+| Member   | Challenge   | Task                                                     |
+| -------- | ----------- | -------------------------------------------------------- |
+| Hans     | 3.1 + 3.4   | Terraform tutorial setup + Git repository configuration  |
+| Abdul    | 3.2         | Replace nginx with game server Docker image in Terraform |
+| Arindam  | 3.2 support | Confirm Docker image, test game server endpoint on EC2   |
+| Jaehyeok | 3.3         | Add `instance_type` and `ssh_location` input variables   |
 
 ---
 
@@ -471,5 +520,3 @@ test: add or update tests
 ci: CI/CD changes
 refactor: code refactoring
 ```
-
-
